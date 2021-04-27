@@ -1,4 +1,4 @@
-# Tugas Besar Strategi Algoritma : Penerapan String Matching dan Regular Expression dalam Pembangunan Deadline Reminder Assistant 
+# Tugas Besar Strategi Algoritma : Deadline Reminder Assistant 
 > Pada tugas kali ini, akan menentukan lintasan terpendek berdasarkan peta Google Map jalan-jalan di kota Bandung dengan menggunakan algoritma A* (dibaca A star). Dari ruas-ruas jalan di peta dibentuk graf. Simpul menyatakan persilangan jalan atau ujung jalan. Asumsikan jalan dapat dilalui dari dua arah. Bobot graf menyatakan jarak (m atau km) antar simpul. Jarak antara dua simpul dapat dihitung dari koordinat kedua simpul menggunakan rumus jarak Euclidean (berdasarkan koordinat) atau dapat menggunakan ruler di Google Map, atau cara lainnya yang disediakan oleh Google Map.
 
 ## Table of contents
