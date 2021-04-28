@@ -76,7 +76,7 @@ $(document).ready(function(){
             }else if(isTanyaSemuaDeadline($value)){
                 for(key of Object.keys(task)){
                     daftarIdDeadline.push(key);
-                }
+                }showTugasbyId(daftarIdDeadline);
             }else if(isAdaKodeMatkul($value)){
                 for(key of Object.keys(task)){
                     if(task[key].tipeTugas=="Tubes" || task[key].tipeTugas=="Tucil"){
