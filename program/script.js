@@ -103,7 +103,7 @@ $(document).ready(function(){
             showMessage("5. Praktikum");
 
         }else{
-            showMessage("Maaf, ga tau anda ngomong apa");
+            showMessage("Maaf, kata yang anda sebut tidak dikenal");
         }
     });
 });
