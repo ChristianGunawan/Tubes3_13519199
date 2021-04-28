@@ -12,7 +12,7 @@
 * [Contact](#contact)
 
 ### General info
-> 
+> Algoritma Boyer Moore atau biasa disebut Algoritma BM adalah algoritma yang melakukan pencarian kata mulai dari indeks terakhir Pattern sampai akhirnya mencapai posisi paling kiri, teknik ini sering dikenal dengan “the looking-glass technique”. Langkah ini berbeda dengan algoritma pencarian string yang serupa (seperti brute force dan Knuth-Morris-Pratt algorithm) yang memulai pencarian kata-kata dari kiri. Mekanisme utama dari algoritma Boyer Moore selain looking-glass technique adalah “the character-jump technique”. Dari namanya saja kita dapat mengartikan bahwa teknik ini dapat melakukan skip/loncat pada beberapa kasus pencocokan string. Algoritma ini menerapkan prinsip akhiran yang baik (good suffix), dimana karakter yang dicari sesuai dengan karakter yang dimilikinya, serta prinsip karakter buruk (bad character), yang jika karakter tidak memiliki kesamaan akan segera diloncati.  Algoritma ini memiliki kompleksitas algoritma O(nm+A) untuk kasus terburuknya. Walaupun kompleksitas algoritma lebih besar jika dibandingkan dengan bruteforce maupun KMP, tetapi algoritma Boyer Moore memiliki kelebihan yang lebih besar jika dibandingkan dengan algoritma lainnya. Algoritma ini dapat mencari string atau pattern pada suatu teks jauh labih cepat untuk variasi karakter yang beragam. Keuntungan inilah yang membuat algoritma ini sering dipakai untuk melakukan string matching karena pada kehidupan sehari-hari karakter yang berada pada suatu teks pasti sangat bervariasi. Kelemahan dari algoritma ini adalah ketika variasi karakter yang dicari tidak beragam seperti karakter binary. 
 
 ### Screenshots
 ![Example screenshot]()
