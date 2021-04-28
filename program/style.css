@@ -73,7 +73,7 @@ html,body{
     background: #007bff;
 }
 .wrapper .form .inbox .msg-header{
-    max-width: 53%;
+    max-width: auto;
     margin-left: 10px;
 }
 .form .inbox .msg-header p{
