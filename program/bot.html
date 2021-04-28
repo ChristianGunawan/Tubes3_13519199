@@ -1,3 +1,4 @@
+<!-- Created By CodingNepal -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,14 +12,14 @@
 </head>
 <body>
     <div class="wrapper">
-        <div class="title">Simple Online Chatbot</div>
+        <div class="title">seroBOT</div>
         <div class="form">
             <div class="bot-inbox inbox">
                 <div class="icon">
                     <i class="fas fa-user"></i>
                 </div>
                 <div class="msg-header">
-                    <p>Hello there, how can I help you?</p>
+                    <p>Halo, ada yang bisa saya bantu ?</p>
                 </div>
             </div>
         </div>
@@ -30,8 +31,16 @@
         </div>
     </div>
 
-    <script>    
+    <script type="text/javascript" src="script.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("#send-btn").on("click", function(){
+                $value = $("#data").val();
+                $msg = '<div class="user-inbox inbox"><div class="msg-header"><p>'+ $value +'</p></div></div>';
+                $(".form").append($msg);
+                $("#data").val('');
+            });
+        });
     </script>
-    
 </body>
 </html>
