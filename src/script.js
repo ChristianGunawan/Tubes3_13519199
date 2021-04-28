@@ -1,4 +1,6 @@
-kataPenting = ['kuis', 'ujian', 'tucil', 'tubes', 'praktikum']
+kataPenting = ['kuis', 'ujian', 'tucil', 'tubes', 'praktikum'];
+
+task = {};
 
 function buildLast(text, pattern){
     let x = {}
@@ -42,7 +44,7 @@ function bmMatch(text, pattern){
 }
 
 function mappingTanggal(tanggal){
-    if(!tanggal.match(/\d{1,2}\/\d{1,2}\/\d{4}/)){
+    if(!tanggal.match(/\d{1,2}\/\d{1,2}\/(\d{4}|\d{2})/)){
         tanggal = tanggal.split(" ");
         let bulan = tanggal[1];
 
@@ -63,13 +65,21 @@ function mappingTanggal(tanggal){
         const hari = tanggal[0];
         const tahun = tanggal[2];
 
-        tanggal = [hari, bulan, tahun].join("/");
+        tanggal = [hari, bulan, tahun];
+    }else{
+        tanggal = tanggal.split("/");
+        let tahun = tanggal[2];
+        if(tahun.length == 2) tahun = "20"+tahun;
+
+        const bulan = tanggal[1];
+        const hari = tanggal[0];
+        tanggal = [hari, bulan, tahun];
     }
-    return tanggal;
+    return tanggal.join("/");
 }
 
 function getTanggal(message){
-    const patternTanggal = /(\d{1,2}\/\d{1,2}\/\d{4})|((\d{1,2})\s([jJ]an(uar[iy])?|[Ff]eb(ruar[iy])?|[Mm]ar(et|ch)?|[aA]pr(il)?|[Mm](ei|ay)|[Jj]un[iy]?|[Jj]ul[iy]?|[Aa](ug|(u)?gust)(us)?|([Ss]ept|[Nn]ov|[Dd]e(s|c))(ember)?|[Oo]kt(ober)?)\s(\d{4}))/;
+    const patternTanggal = /(\d{1,2}\/\d{1,2}\/(\d{4}|\d{2}))|((\d{1,2})\s([jJ]an(uar[iy])?|[Ff]eb(ruar[iy])?|[Mm]ar(et|ch)?|[aA]pr(il)?|[Mm](ei|ay)|[Jj]un[iy]?|[Jj]ul[iy]?|[Aa](ug|(u)?gust)(us)?|([Ss]ept|[Nn]ov|[Dd]e(s|c))(ember)?|[Oo]kt(ober)?)\s(\d{4}|\d{2}))/;
     let tanggal = message.match(patternTanggal);
     if(tanggal){
         tanggal = mappingTanggal(tanggal[0]);
@@ -123,20 +133,21 @@ function getTipeTugas(message){
     return tipeTugas;
 }
 
-function getTask(message){
+function addTask(message){
     const kodeMatkul = getKodeMatkul(message);
     const tanggal = getTanggal(message);
     const tipeTugas = getTipeTugas(message);
     const topik = getTopik(message);
-    const task = {
+    const currentTask = {
         tanggal: tanggal,
         kodeMatkul: kodeMatkul,
         tipeTugas: tipeTugas,
         topik: topik
     }
-    return task;
-}
+    task[Object.keys(task).length+1] = currentTask;
 
+    return currentTask;
+}
 
 function isTanyaDeadline(message){
     message = message.toLowerCase();
@@ -157,7 +168,7 @@ function isTanyaHariIni(message){
     return false;
 }
 
-function isTanyaHariMinggu(message){
+function isTanyaMinggu(message){
     message = message.toLowerCase();
     if(bmMatch(message, "minggu")!=-1) return true;
     return false;
@@ -174,15 +185,15 @@ function getBanyakDurasi(message){
 function getRentangTanggal(message){
     const patternTanggal = /(\d{1,2}\/\d{1,2}\/\d{4})|((\d{1,2})\s([jJ]an(uar[iy])?|[Ff]eb(ruar[iy])?|[Mm]ar(et|ch)?|[aA]pr(il)?|[Mm](ei|ay)|[Jj]un[iy]?|[Jj]ul[iy]?|[Aa](ug|(u)?gust)(us)?|([Ss]ept|[Nn]ov|[Dd]e(s|c))(ember)?|[Oo]kt(ober)?)\s(\d{4}))/g;
     let tanggal = message.match(patternTanggal);
-    // if(tanggal.length == 2){
-    const dari = mappingTanggal(tanggal[0]);
-    const sampai = mappingTanggal(tanggal[1]);
+    let rentangTanggal = [];
+    if(tanggal){
+        for(tgl of tanggal){
+            rentangTanggal.push(mappingTanggal(tgl));
+        }
+    }
 
-    tanggal = [dari, sampai];
-    // }
-    return tanggal;
+    return rentangTanggal;
 }
-
 // rentangTanggal = getRentangTanggal(message);
 function isInRentangTanggal(tanggal, rentangTanggal){
     let from = rentangTanggal[0];
@@ -195,7 +206,7 @@ function isInRentangTanggal(tanggal, rentangTanggal){
     return (check>=from && check<=to);
 }
 
-function isInNweekLater(tanggal, nWeekLater){
+function isInNweeksLater(tanggal, nWeekLater){
     let check = tanggal;
     let from =  new Date();
     let to = new Date(from.getTime() + nWeekLater * 7 * 24 * 60 * 60 * 1000);
@@ -207,3 +218,160 @@ function isInNweekLater(tanggal, nWeekLater){
 
     return isInRentangTanggal(check, rentangTanggal);
 }
+
+function isInNDaysLater(tanggal, nDaysLater){
+    let check = tanggal;
+    let from =  new Date();
+    let to = new Date(from.getTime() + nDaysLater * 24 * 60 * 60 * 1000);
+
+
+    from = from.getDate()+"/"+parseInt(from.getMonth()+1)+"/"+from.getFullYear();
+    to = to.getDate()+"/"+parseInt(to.getMonth()+1)+"/"+to.getFullYear();
+    rentangTanggal = [from, to];
+
+    return isInRentangTanggal(check, rentangTanggal);
+}
+
+function isHariIni(tanggal){
+    let check = getTanggal(tanggal);
+    check =  new Date(getYear(check), parseInt(getMonth(check))-1, getDay(check));
+
+    let today = new Date();
+
+    return check.getDate()==today.getDate() && check.getMonth()==today.getMonth() && check.getFullYear()==check.getFullYear();
+}
+
+function isAdaRentang(message){
+    return getRentangTanggal(message).length==2;
+}
+function getIdTugas(message){
+    let id = message.match(/\d+/);
+    if(id) {
+        id = id[0];
+    }
+    return id;
+}
+function isTanyaSemuaDeadline(message){
+    message = message.toLowerCase();
+    if(bmMatch(message, "sejauh")!=-1) return true;
+    else if(bmMatch(message, "semua")!=-1) return true;
+    return false;
+}
+function isAdaKodeMatkul(message){
+    return getKodeMatkul(message)!=null;
+}
+function isTanyaKuis(message){
+    message = message.toLowerCase();
+    if(bmMatch(message, "kuis")!=-1) return true;
+    return false;
+}
+function isTanyaUjian(message){
+    message = message.toLowerCase();
+    if(bmMatch(message, "ujian")!=-1) return true;
+    return false;
+}
+function isTanyaTucil(message){
+    message = message.toLowerCase();
+    if(bmMatch(message, "tucil")!=-1) return true;
+    return false;
+}
+function isTanyaTubes(message){
+    message = message.toLowerCase();
+    if(bmMatch(message, "tubes")!=-1) return true;
+    return false;
+}
+function isTanyaPraktikum(message){
+    message = message.toLowerCase();
+    if(bmMatch(message, "praktikum")!=-1) return true;
+    return false;
+}
+function isTugasDiundur(message){
+    message = message.toLowerCase();
+    if(bmMatch(message, "diundur")!=-1) return true;
+    return false;
+}
+function getIdDeadlineByTask(message, tugas, id){
+    let daftarIdDeadline = [];
+    if(isTanyaKuis(message)){
+        if(tugas.tipeTugas=="Kuis"){
+            daftarIdDeadline.push(id);
+        }
+    }else if(isTanyaUjian(message)){
+        if(tugas.tipeTugas=="Ujian"){
+            daftarIdDeadline.push(id);
+        }
+    }else if(isTanyaTubes(message)){
+        if(tugas.tipeTugas=="Tubes"){
+            daftarIdDeadline.push(id);
+        }
+    }else if(isTanyaTucil(message)){
+        if(tugas.tipeTugas=="Tucil"){
+            daftarIdDeadline.push(id);
+        }
+    }else if(isTanyaPraktikum(message)){
+        if(tugas.tipeTugas=="Praktikum"){
+            daftarIdDeadline.push(id);
+        }
+    }else{
+        daftarIdDeadline.push(id);
+    }
+    return daftarIdDeadline;
+}
+function mainFunction(message){
+    let daftarIdDeadline = [];
+    // TODO: menampilkan daftarIdDeadline
+
+    if(isTugasDiundur(message)){
+        const id = getIdTugas(message);
+        task[id].tanggal = getTanggal(message);
+        daftarIdDeadline.push(id);
+    }else if(isTanyaDeadline(message)){
+        if(isTanyaMinggu(message)){
+            const banyakMinggu = getBanyakDurasi(message);
+            for(key of Object.keys(task)){
+                if(isInNweeksLater(task[key].tanggal, banyakMinggu)){
+                    let listDeadline = getIdDeadlineByTask(message, task[key], key);
+                    for(deadline of listDeadline) daftarIdDeadline.push(deadline);
+                }
+            }
+        }else if(isTanyaHariIni(message)){
+            for(key of Object.keys(task)){
+                if(isHariIni(task[key].tanggal)){
+                    let listDeadline = getIdDeadlineByTask(message, task[key], key);
+                    for(deadline of listDeadline) daftarIdDeadline.push(deadline);
+                }
+            }
+        }else if(isTanyaHari(message)){
+            const banyakHari = getBanyakDurasi(message);
+            for(key of Object.keys(task)){
+                if(isInNDaysLater(task[key].tanggal, banyakHari)){
+                    let listDeadline = getIdDeadlineByTask(message, task[key], key);
+                    for(deadline of listDeadline) daftarIdDeadline.push(deadline);
+                }
+            }
+        }else if(isAdaRentang(message)){
+            const rentangTanggal = getRentangTanggal(message);
+            for(key of Object.keys(task)){
+                if(isInRentangTanggal(task[key].tanggal, rentangTanggal)){
+                    let listDeadline = getIdDeadlineByTask(message, task[key], key);
+                    for(deadline of listDeadline) daftarIdDeadline.push(deadline);
+                }
+            }
+        }else if(isTanyaSemuaDeadline(message)){
+            for(key of Object.keys(task)){
+                daftarIdDeadline.push(key);
+            }
+        }else if(isAdaKodeMatkul(message)){
+            for(key of Object.keys(task)){
+                if(task[key].tipeTugas=="Tubes" || task[key].tipeTugas=="Tucil"){
+                    if(task[key].kodeMatkul == getKodeMatkul(message)){
+                    daftarIdDeadline.push(key);
+                    }
+                }
+            }
+        }
+    }
+    console.log(daftarIdDeadline);
+}
+
+//TODO poin 1,5,6
