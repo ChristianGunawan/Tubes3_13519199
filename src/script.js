@@ -23,7 +23,6 @@ $(document).ready(function(){
             const id = getIdTugas($value);
             if(id!=null){
                 task[id].tanggal = getTanggal($value);
-                daftarIdDeadline.push(id);
                 showMessage("Tugas berhasil diperbarui");
             }else{
                 showMessage("Tugas gagal diperbarui, pastikan id tugas tersedia di daftar deadline");
