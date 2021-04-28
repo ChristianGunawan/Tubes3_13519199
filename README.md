@@ -1,6 +1,10 @@
 # Tugas Besar Strategi Algoritma : Deadline Reminder Assistant 
 > Pada tugas kali ini, dibuat sebuah chatbot sederhana yang mengimplementasikan Regular Expression dan String Matching. Chatbot berperan sebagai personal assistant yang membantu user dalam mengarsipkan tugas kuliahnya. Pengarsipan tugas tersebut dilakukan oleh user dengan memasukkan kode matakuliah, topik, tanggal deadline, dan topik daripada tugas tersebut. Selain itu, user juga dapat mengupdate tanggal deadline jika diperlukan, menandai tugas yang telah selesai, melihat seluruh tugas yang ada, dan melihat tugas tertentu pada tanggal, rentang tanggal, beberapa n hari ke depan, beberapa n minggu ke depan, atau hari ini. Pengekstrakan setiap kata kunci tersebut dilakukan oleh RegEx dengan bantuan dari string matching yang diimplementasikan dengan algortima Boyer-Moore.
 
+# link website
+https://serobotss.herokuapp.com/
+
+
 ## Table of contents
 * [General info](#general-info)
 * [Screenshots](#screenshots)
