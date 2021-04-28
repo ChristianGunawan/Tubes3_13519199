@@ -146,7 +146,7 @@ function addTask(message){
     }
     task[Object.keys(task).length+1] = currentTask;
 
-    return currentTask;
+    return Object.keys(task).length;
 }
 
 function isTanyaDeadline(message){
@@ -317,14 +317,58 @@ function getIdDeadlineByTask(message, tugas, id){
     }
     return daftarIdDeadline;
 }
+function isSelesai(message){
+    message = message.toLowerCase();
+    if(bmMatch(message, "selesai")!=-1) return true;
+    else if(bmMatch(message, "menyelesaikan")!=-1) return true;
+    return false;
+}
+function isHelp(message){
+    message = message.toLowerCase();
+    if(bmMatch(message, "lakukan")!=-1) return true;
+    else if(bmMatch(message, "ngapain")!=-1) return true;
+    else if(bmMatch(message, "help")!=-1) return true;
+    return false; 
+}
+
+// TODO
+function showTugasbyId(arrayOfId){
+    if(arrayOfId.length!=0){
+        console.log();
+        // DO SOMETHINGGGGGG
+    }else{
+        console.log("Tidak ada");
+    }
+}
+function showMessage(messageToShow){
+
+}
+
 function mainFunction(message){
     let daftarIdDeadline = [];
     // TODO: menampilkan daftarIdDeadline
 
-    if(isTugasDiundur(message)){
+    if(getKodeMatkul(message) && getTanggal(message) && getTipeTugas(message) && getTopik(message)){
+        const currentTaskId = addTask(message);
+        daftarIdDeadline.push(currentTaskId);
+    }else if(isTugasDiundur(message)){
         const id = getIdTugas(message);
-        task[id].tanggal = getTanggal(message);
-        daftarIdDeadline.push(id);
+        if(id!=null){
+            task[id].tanggal = getTanggal(message);
+            daftarIdDeadline.push(id);
+            showMessage("Tugas berhasil diperbarui");
+        }else{
+            showMessage("Tugas gagal diperbarui, pastikan id tugas tersedia di daftar deadline");
+        }
+
+    }else if(isSelesai(message)){
+        const id = getIdTugas(message);
+        if(id!=null){
+            delete task[id];
+            showMessage("Tugas berhasil dihapus");
+        }else{
+            showMessage("Tugas gagal dihapus, pastikan id tugas tersedia di daftar deadline");
+        }
     }else if(isTanyaDeadline(message)){
         if(isTanyaMinggu(message)){
             const banyakMinggu = getBanyakDurasi(message);
@@ -370,8 +414,13 @@ function mainFunction(message){
                 }
             }
         }
+    }else if(isHelp(message)){
+        console.log();
+    }else{
+        console.log();
     }
-    console.log(daftarIdDeadline);
+
+    showTugasbyId(daftarIdDeadline);
 }
 
-//TODO poin 1,5,6
+//TODO poin 1,6
